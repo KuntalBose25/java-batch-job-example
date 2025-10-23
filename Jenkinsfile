@@ -1,31 +1,29 @@
 pipeline {
     agent any
-    tools {
-        jdk 'JDK17'
-        maven 'Maven3'
+    options {
+        skipStagesAfterUnstable()
     }
     stages {
         stage('Checkout') {
             steps {
-                // write your logic here
+                git 'https://github.com/KuntalBose25/java-batch-job-example.git'
             }
         }
         stage('Build') {
-            // write your logic here
-        }
-        stage('Run Application') {
-            // write your logic here
+            steps {
+                bat 'mvn clean install'
+            }
         }
         stage('Test') {
-            // write your logic here
+            steps {
+                bat 'mvn test'
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+    }
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
-        stage('Post Build Notification') {
-            // write your logic here
-    }
-    }
-}
